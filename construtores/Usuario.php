@@ -12,7 +12,7 @@ $con = $conexao->open();
 class Usuario {
 
     function Relatorio() {
-        session_start();
+        //session_start();
         if (isset($_SESSION['periodo'])) {
             $periodo = $_SESSION['periodo'];
         } else {
@@ -35,6 +35,7 @@ class Usuario {
         $processamento = "";
         $data = "";
         $media = "";
+        $tipouser = $_SESSION['tipo_acesso'];
         $tabela = '<table class="table table-sm">
                     <thead>
                         <tr>
@@ -139,7 +140,6 @@ class Usuario {
 
     function BuscaContrato() {
 
-        //include '../config/Conexao.php';
         $conexao = new Conexao;
         $con = $conexao->open();
 
@@ -151,6 +151,21 @@ class Usuario {
         }
         $conexao->close();
         return $contratos;
+    }
+    
+    function BuscaOperadores(){
+        
+        $conexao = new Conexao;
+        $con = $conexao->open();
+        
+        $operadores = array();
+        $query = "select operador from produtividade group by operador";
+        $result = pg_query($con, $query);
+        while ($row = pg_fetch_row($result)) {
+            $operadores[] = $row[0];
+        }
+        $conexao->close();
+        return $operadores;        
     }
 
 }

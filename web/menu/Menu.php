@@ -10,9 +10,11 @@
  *
  * @author ivan.g
  */
+//session_start();
 class Menu {
     
     function carregaMenu() {
+        $operador = $_SESSION['operador'];
         $link = "'usuario.php'";
         $menu = '<nav class = "navbar-expand-lg py-2  navbar-light" style="background-color:#073954;">
                     <a href = "index.php" class = "navbar-brand">
@@ -29,9 +31,9 @@ class Menu {
                                         <a class=nav-link href="index.php">Página Inicial</a>
                                     </li>
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ivan Aparecido Gzyk</a>
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$operador.'</a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                            <a class="dropdown-item" href="../web/script/encerrar_sessao.php">Sair</a>
+                                            <a class="dropdown-item" href="script/encerrar_sessao.php">Sair</a>
                                             <a class="dropdown-item" href="#" onclick="Conteudo('.$link.')">Meus Dados</a>
                                         </div>
                                     </li></ul>

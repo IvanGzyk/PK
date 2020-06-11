@@ -9,6 +9,9 @@ if(isset($_POST['tipo']) && $_POST['tipo'] != null){
 if(isset($_POST['contrato']) && $_POST['contrato'] != null){
     $_SESSION['contrato'] = $_POST['contrato'];
 }
+if(isset($_POST['operador']) && $_POST['operador'] != null){
+    $_SESSION['operador_'] = $_POST['operador'];
+}
 include_once 'menu/Menu.php';
 $menu = new Menu();
 ?>

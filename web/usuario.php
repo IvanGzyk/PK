@@ -36,14 +36,25 @@ if (isset($_SESSION['contrato'])) {
 } else {
     $contrato = "";
 }
+if (isset($_SESSION['operador_'])) {
+    $operador = $_SESSION['operador_'];
+} else {
+    $operador = "";
+}
 
 $usuario = new Usuario();
 $grafico = new Grafico();
 $contratos = $usuario->BuscaContrato();
-//print_r($contratos);
 $option = "";
 foreach ($contratos as $value) {
     $option .= '<option value="' . $value . '">' . $value . '</option>';
+}
+if ($_SESSION['tipo_acesso'] == 'admin') {
+    $operadores = $usuario->BuscaOperadores();
+    $options = "";
+    foreach ($operadores as $value) {
+        $options .= '<option value="' . $value . '">' . $value . '</option>';
+    }
 }
 ?>
 <html lang="pt-BR">
@@ -82,6 +93,19 @@ foreach ($contratos as $value) {
                                 <?= $option ?>
                             </select>
                         </div>
+                        <?php
+                        if ($_SESSION['tipo_acesso'] == 'admin') {
+                            ?>
+                            <div class="form-group mb-2">
+                                <label>Operador:</label>
+                                <select class="form-control form-control-lg" name="operador" onchange="this.form.submit()">
+                                    <option value=""><?= $operador ?></option>
+                                    <?= $options ?>
+                                </select>
+                            </div>
+                            <?php
+                        }
+                        ?>
                     </form>
                     <div class="row p-3">
                         <div class="col-lg-6">

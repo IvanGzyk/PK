@@ -37,15 +37,15 @@ class Grafico {
                 data: {
                     labels: <?= $valores ?>,
                     datasets: [{
-                            label: '<?= $titulo ?>',
-                            backgroundColor: <?= $cor1 ?>,
-                            borderColor: 'rgba(46,139,87)',
-                            data: <?= $data ?>
-                        }, {
                             label: '<?= $titulo2 ?>',
                             borderColor: 'rgb(178,34,34)',
                             data: <?= $data2 ?>,
                             type: 'line'
+                        },{
+                            label: '<?= $titulo ?>',
+                            backgroundColor: <?= $cor1 ?>,
+                            borderColor: 'rgba(46,139,87)',
+                            data: <?= $data ?>
                         }]
                 }
             });</script>
