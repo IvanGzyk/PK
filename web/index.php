@@ -35,7 +35,7 @@ $menu = new Menu();
     <body>
         <div class="top">
             <main>
-<?= $menu->carregaMenu(); ?>
+                <?= $menu->carregaMenu(); ?>
             </main>
         </div>
         <div class="col-10 center-block" id="principal">

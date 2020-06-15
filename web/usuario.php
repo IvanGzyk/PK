@@ -113,7 +113,8 @@ if ($_SESSION['tipo_acesso'] == 'admin') {
                                 <div class="card-header">
                                     <i class="fas fa-chart-pie mr-1"></i>Média X Processsados                              
                                 </div>
-                                <?php $grafico->grafico_pizza($valores, $valores, $medias_operador, 'Charts_g', $cores); ?>  
+                                <?php //$grafico->grafico_barra($data_operador, 'Processado', $medias_operador, 'Charts_gg');?> 
+                                <?php $grafico->carrega_grafico_barras2($data_operador, 'Processado', 'Média', $medias_operador, $medias, "'#98FB98'", "'#FF6347'",  'Charts_g') ?> 
                             </div>
                         </div>
 
