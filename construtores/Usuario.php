@@ -16,7 +16,7 @@ class Usuario {
         if (isset($_SESSION['periodo'])) {
             $periodo = $_SESSION['periodo'];
         } else {
-            $periodo = 0;
+            $periodo = 30;
         }
         if (isset($_SESSION['tipo'])) {
             $tipo = $_SESSION['tipo'];
@@ -26,7 +26,7 @@ class Usuario {
         if (isset($_SESSION['contrato'])) {
             $contrato = $_SESSION['contrato'];
         } else {
-            $contrato = "";
+            $contrato = "%%";
         }
         //include '../config/Conexao.php';
         $conexao = new Conexao;
@@ -49,12 +49,12 @@ class Usuario {
         if ($tipouser == 'admin') {//executa query para todos os operadores...
             //Query para pegar a média geral.
             $query = "select trunc(avg($tipo),2) media from produtividade
-                    where
-                    cast ((dia ||'/'|| mes ||'/' || ano) as date) BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' AND CURRENT_DATE OR cast ((dia ||'/'|| mes ||'/' || ano) as date) = CURRENT_DATE
-                    and 
-                    $tipo > 0
-                    and
-                    contrato like '%$contrato%'";
+                where
+                cast ((dia ||'/'|| mes ||'/' || ano) as date) BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' AND CURRENT_DATE OR cast ((dia ||'/'|| mes ||'/' || ano) as date) = CURRENT_DATE
+                and 
+                $tipo > 0
+                and
+                contrato Like '$contrato'";
 
             $result = pg_query($con, $query);
 
@@ -68,11 +68,12 @@ class Usuario {
                     where
                     $tipo > 0
                     and
-                    contrato like '%$contrato%'
+                    contrato like '$contrato'
                     order by date
                     )t
                     where
-                    date BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' AND CURRENT_DATE OR date = CURRENT_DATE";
+                    date BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' AND CURRENT_DATE OR date = CURRENT_DATE
+                    order by date desc";
 
             $result = pg_query($con, $query);
             while ($row = pg_fetch_row($result)) {
@@ -95,7 +96,7 @@ class Usuario {
                     and 
                     $tipo > 0
                     and
-                    contrato like '%$contrato%'";
+                    contrato like '$contrato'";
 
             $result = pg_query($con, $query);
 
@@ -109,13 +110,14 @@ class Usuario {
                     where
                     $tipo > 0
                     and
-                    contrato like '%$contrato%'
+                    contrato like '$contrato'
                     and 
                     operador = 'Lylian'
                     order by date
                     )t
                     where
-                    date BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' AND CURRENT_DATE OR date = CURRENT_DATE";
+                    date BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' AND CURRENT_DATE OR date = CURRENT_DATE
+                    order by date desc";
 
             $result = pg_query($con, $query);
             while ($row = pg_fetch_row($result)) {
@@ -138,6 +140,38 @@ class Usuario {
         return $tabela;
     }
 
+    function RelatórioUsuarios() {
+        $conexao = new Conexao;
+        $con = $conexao->open();
+        $tabela = '<table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Email</th>
+                            <th scope="col">Operador</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+        $query = "SELECT email, operador FROM usuarios";
+
+        $result = pg_query($con, $query);
+        while ($row = pg_fetch_row($result)) {
+            $link = "'../web/update.php?email=".$row[0]."'";
+            $link1 = "'../web/delete.php?email=".$row[0]."'";
+            $tabela .= '<tr>'
+                    . '<td>' . $row[0] . '</td>'
+                    . '<td>' . $row[1] . '</td>'
+                    . '<td><input type="button" value="Ressetar" class="btn btn-info btn-sm" onclick="Conteudo(' . $link . ')">  '
+                    . '<input type="button" value="Deletar" class="btn btn-danger btn-sm" onclick="Conteudo(' . $link1 . ')"></td>'
+                    . '</tr>';
+        }
+        $tabela .= '
+                    </tbody>
+                </table>';
+        $conexao->close();
+        return $tabela;
+    }
+
     function BuscaContrato() {
 
         $conexao = new Conexao;
@@ -152,12 +186,12 @@ class Usuario {
         $conexao->close();
         return $contratos;
     }
-    
-    function BuscaOperadores(){
-        
+
+    function BuscaOperadores() {
+
         $conexao = new Conexao;
         $con = $conexao->open();
-        
+
         $operadores = array();
         $query = "select operador from produtividade group by operador";
         $result = pg_query($con, $query);
@@ -165,10 +199,21 @@ class Usuario {
             $operadores[] = $row[0];
         }
         $conexao->close();
-        return $operadores;        
+        return $operadores;
+    }
+
+    function Cadatro($email, $nome) {
+        $conexao = new Conexao;
+        $con = $conexao->open();
+        $query = "INSERT INTO usuarios(email, operador) VALUES('$email', '$nome')";
+        if (pg_query($con, $query)) {
+            echo '  <script>
+                        alert("O cadastro realizado com sucesso!");
+                        window.location.href = "../web/index.php";
+                    </script>';
+        }
     }
 
 }
-
 ?>
     

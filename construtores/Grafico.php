@@ -29,7 +29,7 @@ class Grafico {
 
     function carrega_grafico_barras2($valores, $titulo, $titulo2, $data, $data2, $cor1, $cor2, $id) {
         ?>
-        <canvas id="<?= $id ?>"  style="max-width: 500px;"></canvas>
+        <canvas id="<?= $id ?>"></canvas>
         <script>
             var ctx = document.getElementById('<?= $id ?>').getContext('2d');
             var myChart = new Chart(ctx, {

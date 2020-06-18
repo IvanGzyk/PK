@@ -33,6 +33,9 @@ if (isset($_SESSION['tipo'])) {
 }
 if (isset($_SESSION['contrato'])) {
     $contrato = $_SESSION['contrato'];
+    if ($contrato == "%%") {
+        $contrato = "Todos";
+    }
 } else {
     $contrato = "";
 }
@@ -45,7 +48,7 @@ if (isset($_SESSION['operador_'])) {
 $usuario = new Usuario();
 $grafico = new Grafico();
 $contratos = $usuario->BuscaContrato();
-$option = "";
+$option = '<option value="%%">Todos</option>';
 foreach ($contratos as $value) {
     $option .= '<option value="' . $value . '">' . $value . '</option>';
 }
@@ -107,27 +110,40 @@ if ($_SESSION['tipo_acesso'] == 'admin') {
                         }
                         ?>
                     </form>
-                    <div class="row p-3">
-                        <div class="col-lg-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-pie mr-1"></i>Média X Processsados                              
+                    <?php if ($_SESSION['tipo_acesso'] == 'admin') { ?>
+                        <div class="row p-3">
+                            <div class="col-lg-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-pie mr-1"></i>Média X Processsados                              
+                                    </div>
+                                    <?php //$grafico->grafico_barra($data_operador, 'Processado', $medias_operador, 'Charts_gg');?> 
+                                    <?php $grafico->carrega_grafico_barras2($data_operador, 'Processado', 'Média', $medias_operador, $medias, "'#98FB98'", "'#FF6347'", 'Charts_g') ?> 
                                 </div>
-                                <?php //$grafico->grafico_barra($data_operador, 'Processado', $medias_operador, 'Charts_gg');?> 
-                                <?php $grafico->carrega_grafico_barras2($data_operador, 'Processado', 'Média', $medias_operador, $medias, "'#98FB98'", "'#FF6347'",  'Charts_g') ?> 
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar mr-1"></i><?= $tipo ?> <button type="button" class="btn btn-info btn-sm float-right" data-toggle="modal" data-target="#relatorio">EXTRATO DETALHADO</button>
+                                    </div>
+                                    <?php $grafico->carrega_grafico_barras2($data, 'Processado', 'Média', $processamento, $medias, "'#98FB98'", "'#FF6347'", $id) ?>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="col-lg-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar mr-1"></i><?= $tipo ?> <button type="button" class="btn btn-info btn-sm float-right" data-toggle="modal" data-target="#relatorio">EXTRATO DETALHADO</button>
+                    <?php } else { ?>
+                        <div class="row p-3">
+                            <div class="col-lg-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-pie mr-1"></i>Média X Processsados                              
+                                    </div>
+                                    <?php //$grafico->grafico_barra($data_operador, 'Processado', $medias_operador, 'Charts_gg');?> 
+                                    <?php $grafico->carrega_grafico_barras2($data_operador, 'Processado', 'Média', $medias_operador, $medias, "'#98FB98'", "'#FF6347'", 'Charts_g') ?> 
                                 </div>
-                                <?php $grafico->carrega_grafico_barras2($data, 'Processado', 'Média', $processamento, $medias, "'#98FB98'", "'#FF6347'", $id) ?>
                             </div>
                         </div>
-
-                    </div>
+                    <?php } ?>
                     <div class="row p-3">
                         <div class="modal fade" id="relatorio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                             <div class="modal-dialog modal-lg" role="document">

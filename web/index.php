@@ -2,6 +2,8 @@
 session_start();
 if(isset($_POST['periodo']) && $_POST['periodo'] != null){
     $_SESSION['periodo'] = $_POST['periodo'];
+}else{
+   $_SESSION['periodo'] = 30; 
 }
 if(isset($_POST['tipo']) && $_POST['tipo'] != null){
     $_SESSION['tipo'] = $_POST['tipo'];
@@ -39,6 +41,7 @@ $menu = new Menu();
             </main>
         </div>
         <div class="col-10 center-block" id="principal">
+            
         </div>
     </body>
     <?php

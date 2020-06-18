@@ -4,7 +4,7 @@ session_start();
 if (isset($_SESSION['periodo'])) {
     $periodo = $_SESSION['periodo'];
 } else {
-    $periodo = 0;
+    $periodo = 30;
 }
 if (isset($_SESSION['tipo'])) {
     $tipo = $_SESSION['tipo'];
@@ -14,7 +14,7 @@ if (isset($_SESSION['tipo'])) {
 if (isset($_SESSION['contrato'])) {
     $contrato = $_SESSION['contrato'];
 } else {
-    $contrato = "";
+    $contrato = "%%";
 }
 if (isset($_SESSION['operador_'])) {
     $usuario = $_SESSION['operador_'];
@@ -46,7 +46,7 @@ if ($tipouser == 'admin') {//executa query para todos os operadores...
         and 
         $tipo > 0
         and
-        contrato like '%$contrato%'";
+        contrato Like '$contrato'";
     $result = pg_query($con, $query);
 
     while ($row = pg_fetch_row($result)) {
@@ -59,11 +59,12 @@ if ($tipouser == 'admin') {//executa query para todos os operadores...
         where
         $tipo > 0
         and
-        contrato like '%$contrato%'
+        contrato like '$contrato'
         order by date
         )t
         where
-        date BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' AND CURRENT_DATE OR date = CURRENT_DATE";
+        date BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' AND CURRENT_DATE OR date = CURRENT_DATE
+        order by date desc";
 
     $result = pg_query($con, $query);
     while ($row = pg_fetch_row($result)) {
@@ -78,7 +79,7 @@ if ($tipouser == 'admin') {//executa query para todos os operadores...
             and cast((dia ||'/'|| mes ||'/' || ano) as date) BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' 
             AND CURRENT_DATE and $tipo > 0
             and 
-            contrato = '$contrato'
+            contrato Like '$contrato'
             order by date desc";
     $result = pg_query($con, $query);
     while ($row = pg_fetch_row($result)) {
@@ -93,7 +94,7 @@ if ($tipouser == 'admin') {//executa query para todos os operadores...
         and 
         $tipo > 0
         and
-        contrato like '%$contrato%'";
+        contrato like '$contrato'";
     $result = pg_query($con, $query);
 
     while ($row = pg_fetch_row($result)) {
@@ -106,7 +107,7 @@ if ($tipouser == 'admin') {//executa query para todos os operadores...
         where
         $tipo > 0
         and
-        contrato like '%$contrato%'
+        contrato like '$contrato'
         and 
         operador = '$usuario'
         order by date
@@ -128,7 +129,7 @@ if ($tipouser == 'admin') {//executa query para todos os operadores...
             and cast((dia ||'/'|| mes ||'/' || ano) as date) BETWEEN CURRENT_DATE - INTERVAL '$periodo DAY' 
             AND CURRENT_DATE and $tipo > 0
             and 
-            contrato = '$contrato'
+            contrato Like '$contrato'
             order by date desc";
             
     $result = pg_query($con, $query);
