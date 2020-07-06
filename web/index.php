@@ -1,4 +1,7 @@
 <?php
+include '../construtores/Usuario.php';
+$usuario = new Usuario();
+include_once 'script/funcoes.php';
 session_start();
 if(isset($_POST['periodo']) && $_POST['periodo'] != null){
     $_SESSION['periodo'] = $_POST['periodo'];
@@ -14,8 +17,18 @@ if(isset($_POST['contrato']) && $_POST['contrato'] != null){
 if(isset($_POST['operador']) && $_POST['operador'] != null){
     $_SESSION['operador_'] = $_POST['operador'];
 }
+if(isset($_POST['operador_pi']) && $_POST['operador_pi'] != null){
+    $_SESSION['operador_pi'] = $_POST['operador_pi'];
+}
 include_once 'menu/Menu.php';
 $menu = new Menu();
+if ($_SESSION['tipo_acesso'] == 'admin') {
+    $operadores = $usuario->BuscaOperadores();
+    $options = '<option value="%%">Todos</option>';
+    foreach ($operadores as $value) {
+        $options .= '<option value="' . $value . '">' . $value . '</option>';
+    }
+}
 ?>
 <html lang="pt-BR">
     <head>
@@ -41,7 +54,7 @@ $menu = new Menu();
             </main>
         </div>
         <div class="col-10 center-block" id="principal">
-            
+            <?php include_once 'pg_inicial.php'; ?>
         </div>
     </body>
     <?php

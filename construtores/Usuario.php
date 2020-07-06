@@ -156,14 +156,81 @@ class Usuario {
 
         $result = pg_query($con, $query);
         while ($row = pg_fetch_row($result)) {
-            $link = "'../web/update.php?email=".$row[0]."'";
-            $link1 = "'../web/delete.php?email=".$row[0]."'";
+            $link = "'../web/update.php?email=" . $row[0] . "'";
+            $link1 = "'../web/delete.php?email=" . $row[0] . "'";
             $tabela .= '<tr>'
                     . '<td>' . $row[0] . '</td>'
                     . '<td>' . $row[1] . '</td>'
                     . '<td><input type="button" value="Ressetar" class="btn btn-info btn-sm" onclick="Conteudo(' . $link . ')">  '
                     . '<input type="button" value="Deletar" class="btn btn-danger btn-sm" onclick="Conteudo(' . $link1 . ')"></td>'
                     . '</tr>';
+        }
+        $tabela .= '
+                    </tbody>
+                </table>';
+        $conexao->close();
+        return $tabela;
+    }
+
+    function RelatoriioInicial($ope, $mult) {
+        $conexao = new Conexao;
+        $con = $conexao->open();
+        $mes = date('m');
+        $ano = date('Y');
+        $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
+        $ultimoDia = date('Y-m-' . $ultimoDia);
+        $primeiroDia = date('Y-m-01');
+        $diaAtual = date('Y-m-d');
+        $qtdaDias = getWorkingDays($primeiroDia, $ultimoDia);
+        $diasUties = DiasUteis($primeiroDia, $diaAtual);
+        $tabela = '<table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">DATA</th>
+                                <th scope="col">PRODUÇÃO DIA</th>
+                                <th scope="col">ACOMULADO</th>
+                                <th scope="col">PROJEÇÃO INDIVIDUAL</th>
+                                <th scope="col">ESPERADO</th>
+                                </tr>';
+
+        $acumulado = 0;
+        foreach ($diasUties as $value) {
+
+            $td_VL = "";
+            $td_pd = "";
+            $td_ac = "";
+            $td_PI = "";
+            $td_ES = "";
+
+            $query = "SELECT dia, sum(triagem + processamento + validacao) sum FROM produtividade
+                    WHERE operador LIKE '$ope'
+                    AND 
+                    cast ((dia ||'/'|| mes ||'/' || ano) as DATE) = '$value'
+                    GROUP BY dia
+                    ORDER BY dia";
+            $result = pg_query($con, $query);
+            $meta = 28000 * $mult;
+            while ($row = pg_fetch_row($result)) {
+                $dia = date('Y-m-' . $row[0]);
+                $qtdaDia = getWorkingDays($primeiroDia, $dia);
+                    $pdia = $row[1];
+                $acumulado = $pdia + $acumulado;
+                $projeção = ($acumulado / $qtdaDia) * $qtdaDias;
+                $projeção = number_format($projeção, 0, '', '');
+                
+                $td_VL .= "<td>$value</td>";
+                $td_pd .= "<td>$pdia</td>";
+                $td_ac .= "<td>$acumulado</td>";
+                $td_PI .= "<td>$projeção</td>";
+                $td_ES .= "<td>$meta</td></tr>";
+            }
+
+            $tabela .= '<tr>'
+                    . $td_VL
+                    . $td_pd
+                    . $td_ac
+                    . $td_PI
+                    . $td_ES;
         }
         $tabela .= '
                     </tbody>
@@ -212,6 +279,43 @@ class Usuario {
                         window.location.href = "../web/index.php";
                     </script>';
         }
+    }
+    
+    function DadosProjecao($ope, $mult){        
+        $conexao = new Conexao;
+        $con = $conexao->open();
+        $mes = date('m');
+        $ano = date('Y');
+        $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
+        $ultimoDia = date('Y-m-' . $ultimoDia);
+        $primeiroDia = date('Y-m-01');
+        $diaAtual = date('Y-m-d');
+        $qtdaDias = getWorkingDays($primeiroDia, $ultimoDia);
+        $diasUties = DiasUteis($primeiroDia, $diaAtual);
+        $acumulado = 0;
+        $dados = array();
+        foreach ($diasUties as $value) {
+            $query = "SELECT dia, sum(triagem + processamento + validacao) sum FROM produtividade
+                    WHERE operador LIKE '$ope'
+                    AND 
+                    cast ((dia ||'/'|| mes ||'/' || ano) as DATE) = '$value'
+                    GROUP BY dia
+                    ORDER BY dia";
+            $result = pg_query($con, $query);
+            while ($row = pg_fetch_row($result)) {
+                $dia = date('Y-m-' . $row[0]);
+                $qtdaDia = getWorkingDays($primeiroDia, $dia);
+                    $pdia = $row[1];
+                $acumulado = $pdia + $acumulado;
+                $projeção = ($acumulado / $qtdaDia) * $qtdaDias;
+                $projeção = number_format($projeção, 0, '', '');
+                $dados['projecao'][] = $projeção;
+                $dados['data'][] = $value;
+                $dados['meta'][] = 28000 * $mult;
+            }
+        }
+        $conexao->close();
+        return $dados;
     }
 
 }

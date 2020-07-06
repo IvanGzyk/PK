@@ -112,17 +112,16 @@ if ($_SESSION['tipo_acesso'] == 'admin') {
                     </form>
                     <?php if ($_SESSION['tipo_acesso'] == 'admin') { ?>
                         <div class="row p-3">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="card mb-4">
                                     <div class="card-header">
-                                        <i class="fas fa-chart-pie mr-1"></i>Média X Processsados                              
+                                        <i class="fas fa-chart-bar mr-1"></i>Média X Processsados                              
                                     </div>
-                                    <?php //$grafico->grafico_barra($data_operador, 'Processado', $medias_operador, 'Charts_gg');?> 
                                     <?php $grafico->carrega_grafico_barras2($data_operador, 'Processado', 'Média', $medias_operador, $medias, "'#98FB98'", "'#FF6347'", 'Charts_g') ?> 
                                 </div>
                             </div>
 
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar mr-1"></i><?= $tipo ?> <button type="button" class="btn btn-info btn-sm float-right" data-toggle="modal" data-target="#relatorio">EXTRATO DETALHADO</button>
@@ -136,10 +135,9 @@ if ($_SESSION['tipo_acesso'] == 'admin') {
                             <div class="col-lg-12">
                                 <div class="card mb-4">
                                     <div class="card-header">
-                                        <i class="fas fa-chart-pie mr-1"></i>Média X Processsados                              
+                                        <i class="fas fa-chart-bar mr-1"></i>Média X Processsados                              
                                     </div>
-                                    <?php //$grafico->grafico_barra($data_operador, 'Processado', $medias_operador, 'Charts_gg');?> 
-                                    <?php $grafico->carrega_grafico_barras2($data_operador, 'Processado', 'Média', $medias_operador, $medias, "'#98FB98'", "'#FF6347'", 'Charts_g') ?> 
+                                   <?php $grafico->carrega_grafico_barras2($data_operador, 'Processado', 'Média', $medias_operador, $medias, "'#98FB98'", "'#FF6347'", 'Charts_g') ?> 
                                 </div>
                             </div>
                         </div>

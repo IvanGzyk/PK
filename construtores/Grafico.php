@@ -29,7 +29,7 @@ class Grafico {
 
     function carrega_grafico_barras2($valores, $titulo, $titulo2, $data, $data2, $cor1, $cor2, $id) {
         ?>
-        <canvas id="<?= $id ?>"></canvas>
+        <canvas id="<?= $id ?>"style="margin-top:30px; width: 100%"></canvas>
         <script>
             var ctx = document.getElementById('<?= $id ?>').getContext('2d');
             var myChart = new Chart(ctx, {
@@ -41,7 +41,7 @@ class Grafico {
                             borderColor: 'rgb(178,34,34)',
                             data: <?= $data2 ?>,
                             type: 'line'
-                        },{
+                        }, {
                             label: '<?= $titulo ?>',
                             backgroundColor: <?= $cor1 ?>,
                             borderColor: 'rgba(46,139,87)',
@@ -83,7 +83,6 @@ class Grafico {
                     labels: <?= $valores ?>,
                     datasets: [{
                             label: '<?= $titulo ?>',
-                            /*backgroundColor: ['rgb(255, 99, 132)', 'rgb(255, 199, 132)', 'rgb(55, 99, 132)'],*/
                             data: <?= $data ?>
                         }]
                 },
@@ -95,9 +94,9 @@ class Grafico {
         <?php
     }
 
-    function grafic_linha($valores, $titulo, $data, $id, $color) {
+    function grafico_linha($valores, $titulo, $titulo1, $data, $data1, $id) {
         ?>
-        <canvas id="<?= $id ?>" style="margin-top:30px"></canvas>
+        <canvas id="<?= $id ?>"></canvas>
         <script>
             var ctx = document.getElementById('<?= $id ?>').getContext('2d');
             var myChart = new Chart(ctx, {
@@ -106,9 +105,13 @@ class Grafico {
                     labels: <?= $valores ?>,
                     datasets: [{
                             label: '<?= $titulo ?>',
-                            backgroundColor: <?= $color ?>,
-                            borderColor: "#2E8B57",
+                            borderColor: "#B22222",
                             data: <?= $data ?>
+                        },
+                        {
+                            label: '<?= $titulo1 ?>',
+                            borderColor: "#836FFF",
+                            data: <?= $data1 ?>
                         }]
                 }
             });</script>
